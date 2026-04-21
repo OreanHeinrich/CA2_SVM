@@ -1,7 +1,7 @@
 % Task 1: compute discriminant functions g(.) for required SVMs.
 
 clear;
-load train.mat;  % train_data is features x samples (57 x N), labels are N x 1
+load train.mat;  % Assignment MAT files store data as features x samples (57 x N), labels N x 1
 
 X = double(train_data);
 y = double(train_label(:));

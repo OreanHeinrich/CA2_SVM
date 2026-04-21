@@ -12,7 +12,7 @@ end
 
 X = double(X);
 y = double(y(:));
-ALPHA_TOLERANCE = 1e-6;
+ALPHA_TOLERANCE = 1e-6;  % treat smaller alpha values as numerical zero
 [~, nSamples] = size(X);
 
 if ~all(ismember(unique(y), [-1, 1]))
@@ -32,7 +32,7 @@ end
 
 % Build Hessian and enforce symmetry with light regularization for stability.
 H = (y * y') .* K;
-H = (H + H') / 2 + 1e-10 * eye(nSamples);
+H = (H + H') / 2 + 1e-10 * eye(nSamples);  % tiny ridge for quadprog stability
 f = -ones(nSamples, 1);
 Aeq = y';
 beq = 0;
