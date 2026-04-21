@@ -13,7 +13,6 @@ switch lower(model.kernelType)
 end
 
 g = (model.alpha .* model.y)' * K + model.b;
-pred = ones(1, size(Xq, 2));
-pred(g < 0) = -1;
-pred = pred(:);
+pred = ones(size(Xq, 2), 1);
+pred(g(:) < 0) = -1;
 end
