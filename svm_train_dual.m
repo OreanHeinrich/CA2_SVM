@@ -34,6 +34,7 @@ switch lower(kernelType)
         dotProd = Xn' * Xn;
         dotDiagMean = mean(diag(dotProd));
         if ~isfinite(dotDiagMean) || dotDiagMean <= 0
+            warning('Polynomial kernel scale fallback triggered; using scale=1.');
             dotDiagMean = 1;
         end
         kernelScale = dotDiagMean;
@@ -67,6 +68,7 @@ opts = optimoptions('quadprog', ...
 
 diagMean = mean(abs(diag(Hbase)));
 if ~isfinite(diagMean) || diagMean <= 0
+    warning('Hessian diagonal scale fallback triggered; using scale=1.');
     diagMean = 1;
 end
 ridgeCandidates = diagMean * [1e-10, 1e-8, 1e-6, 1e-4];
@@ -74,12 +76,14 @@ ridgeCandidates = max(ridgeCandidates, 1e-12);
 
 alpha = [];
 exitflag = -Inf;
+selectedRidge = NaN;
 for r = 1:numel(ridgeCandidates)
     H = Hbase + ridgeCandidates(r) * eye(nSamples);
     [alphaTry, ~, exitflagTry] = quadprog(H, f, [], [], Aeq, beq, lb, ub, [], opts);
     if exitflagTry > 0 && ~isempty(alphaTry)
         alpha = alphaTry;
         exitflag = exitflagTry;
+        selectedRidge = ridgeCandidates(r);
         break;
     end
     exitflag = exitflagTry;
@@ -121,4 +125,5 @@ model.svMask = svMask;
 model.normMu = normMu;
 model.normSigma = normSigma;
 model.kernelScale = kernelScale;
+model.ridgeUsed = selectedRidge;
 end
