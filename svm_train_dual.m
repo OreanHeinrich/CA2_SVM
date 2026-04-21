@@ -23,7 +23,7 @@ end
 normMu = mean(X, 2);
 normSigma = std(X, 0, 2);
 normSigma(normSigma < 1e-12) = 1;
-Xn = (X - normMu) ./ normSigma;
+Xn = bsxfun(@rdivide, bsxfun(@minus, X, normMu), normSigma);
 
 switch lower(kernelType)
     case 'linear'
@@ -66,13 +66,13 @@ opts = optimoptions('quadprog', ...
     'OptimalityTolerance', 1e-8, ...
     'StepTolerance', 1e-12);
 
-diagMean = mean(abs(diag(Hbase)));
+diagMean = mean(diag(Hbase));
 if ~isfinite(diagMean) || diagMean <= 0
     warning('Hessian diagonal scale fallback triggered; using scale=1.');
     diagMean = 1;
 end
 ridgeCandidates = diagMean * [1e-10, 1e-8, 1e-6, 1e-4];
-ridgeCandidates = max(ridgeCandidates, 1e-12);
+ridgeCandidates = max(ridgeCandidates, 1e-12);  % keep minimum ridge to avoid near-singular H
 
 alpha = [];
 exitflag = -1;
@@ -125,5 +125,5 @@ model.svMask = svMask;
 model.normMu = normMu;
 model.normSigma = normSigma;
 model.kernelScale = kernelScale;
-model.ridgeUsed = selectedRidge;  % NaN means all ridge attempts failed
+model.ridgeUsed = selectedRidge;  % records successful ridge level used by quadprog
 end

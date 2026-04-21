@@ -3,7 +3,7 @@ function [pred, g] = svm_predict_labels(model, Xq)
 
 Xq = double(Xq);
 if isfield(model, 'normMu') && isfield(model, 'normSigma')
-    Xq = (Xq - model.normMu) ./ model.normSigma;
+    Xq = bsxfun(@rdivide, bsxfun(@minus, Xq, model.normMu), model.normSigma);
 end
 
 switch lower(model.kernelType)
