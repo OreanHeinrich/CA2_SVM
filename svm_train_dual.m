@@ -75,7 +75,7 @@ ridgeCandidates = diagMean * [1e-10, 1e-8, 1e-6, 1e-4];
 ridgeCandidates = max(ridgeCandidates, 1e-12);
 
 alpha = [];
-exitflag = -Inf;
+exitflag = -1;
 selectedRidge = NaN;
 for r = 1:numel(ridgeCandidates)
     H = Hbase + ridgeCandidates(r) * eye(nSamples);
@@ -125,5 +125,5 @@ model.svMask = svMask;
 model.normMu = normMu;
 model.normSigma = normSigma;
 model.kernelScale = kernelScale;
-model.ridgeUsed = selectedRidge;
+model.ridgeUsed = selectedRidge;  % NaN means all ridge attempts failed
 end
