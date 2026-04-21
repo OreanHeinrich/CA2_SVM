@@ -5,7 +5,7 @@ load train.mat;
 load test.mat;
 
 if ~isfile('task1_models.mat')
-    task1_compute_models;
+    error('task1_models.mat not found. Please run task1_compute_models first.');
 end
 load task1_models.mat;
 

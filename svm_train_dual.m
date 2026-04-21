@@ -12,6 +12,7 @@ end
 
 X = double(X);
 y = double(y(:));
+ALPHA_TOLERANCE = 1e-6;
 [~, nSamples] = size(X);
 
 if ~all(ismember(unique(y), [-1, 1]))
@@ -46,10 +47,11 @@ opts = optimoptions('quadprog', 'Display', 'off');
 [alpha, ~, exitflag] = quadprog(H, f, [], [], Aeq, beq, lb, ub, [], opts);
 
 if exitflag <= 0 || isempty(alpha)
-    error('QP failed (exitflag=%d).', exitflag);
+    error(['QP failed (exitflag=%d). Check kernel/data compatibility, ', ...
+        'hard-margin feasibility, or numerical conditioning.'], exitflag);
 end
 
-svMask = alpha > 1e-6;
+svMask = alpha > ALPHA_TOLERANCE;
 if ~any(svMask)
     error('No support vectors found.');
 end
@@ -57,7 +59,7 @@ end
 if isempty(C)
     bMask = svMask;
 else
-    bMask = alpha > 1e-6 & alpha < (C - 1e-6);
+    bMask = alpha > ALPHA_TOLERANCE & alpha < (C - ALPHA_TOLERANCE);
     if ~any(bMask)
         bMask = svMask;
     end

@@ -4,6 +4,9 @@
 if ~exist('eval_data', 'var')
     if isfile('eval.mat')
         load eval.mat;
+        if ~exist('eval_data', 'var')
+            error('eval.mat exists but does not contain variable eval_data.');
+        end
     else
         error('eval_data is not in workspace and eval.mat is not found.');
     end
