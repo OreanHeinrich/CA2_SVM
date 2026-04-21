@@ -51,6 +51,7 @@ fprintf('Test accuracy matrix:\n');
 disp(results.softPolyTest);
 
 function [accTr, accTe] = evaluate_one(model, Xtr, ytr, Xte, yte)
+% Evaluate one trained model on train/test sets and return accuracies.
 if isempty(model)
     accTr = NaN;
     accTe = NaN;

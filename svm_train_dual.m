@@ -12,7 +12,7 @@ end
 
 X = double(X);
 y = double(y(:));
-[nFeatures, nSamples] = size(X); %#ok<ASGLU>
+[~, nSamples] = size(X);
 
 if ~all(ismember(unique(y), [-1, 1]))
     error('Labels must be -1 or +1.');
