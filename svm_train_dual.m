@@ -30,6 +30,7 @@ switch lower(kernelType)
         error('Unsupported kernelType: %s', kernelType);
 end
 
+% Build Hessian and enforce symmetry with light regularization for stability.
 H = (y * y') .* K;
 H = (H + H') / 2 + 1e-10 * eye(nSamples);
 f = -ones(nSamples, 1);

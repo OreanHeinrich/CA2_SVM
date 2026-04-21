@@ -5,6 +5,9 @@ load train.mat;  % train_data is features x samples (57 x N), labels are N x 1
 
 X = double(train_data);
 y = double(train_label(:));
+if size(X, 1) ~= 57
+    error('Expected train_data to be 57xN (features x samples).');
+end
 
 pHard = 2:5;
 pSoft = 1:5;

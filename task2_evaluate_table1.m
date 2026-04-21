@@ -59,6 +59,6 @@ if isempty(model)
 end
 predTr = svm_predict_labels(model, Xtr);
 predTe = svm_predict_labels(model, Xte);
-accTr = mean(predTr == ytr);
-accTe = mean(predTe == yte);
+accTr = mean(double(predTr == ytr));
+accTe = mean(double(predTe == yte));
 end
